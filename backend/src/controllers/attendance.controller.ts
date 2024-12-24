@@ -24,7 +24,29 @@ class AttendanceController {
             }
             const result = await AttendanceService.submit(data);
 
-            return res.status(201).json({
+            return res.status(200).json({
+                success: true,
+                message: 'Success',
+                data: result
+            })
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed'
+            });
+        }
+    }
+
+    public async report(
+        req: Request<{}, ApiResponse>,
+        res: Response<ApiResponse>
+    ): Promise<any> {
+        try {
+            const timezone = typeof req.query.timezone == 'string' ? req.query.timezone : 'UTC'
+
+            const result = await AttendanceService.report(timezone, req.user.id);
+
+            return res.status(200).json({
                 success: true,
                 message: 'Success',
                 data: result
