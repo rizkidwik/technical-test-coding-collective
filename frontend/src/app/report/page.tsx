@@ -15,6 +15,8 @@ interface Attendance {
   clock_out: string
   clock_out_photo: string
   clock_out_location: string
+  clockInLocationName: string
+  clockOutLocationName: string
   
 }
 
@@ -47,7 +49,15 @@ export default function Report() {
       })
       if (response.ok) {
         const res = await response.json()
-        setAttendances(res.data)
+        const updatedData = await Promise.all(
+            res.data.map(async (item: Attendance) => ({
+                ...item,
+                clockInLocationName: item.clock_in_location ? await reverseGeocoding(item.clock_in_location) : null,
+                clockOutLocationName: item.clock_out_location ? await reverseGeocoding(item.clock_out_location) : null
+            }))
+          );
+          console.log(updatedData)
+        setAttendances(updatedData)
       } else {
         setError('Failed')
         router.push('/login')
@@ -66,6 +76,14 @@ export default function Report() {
         fetchAttendances(value)
   }
   
+  const reverseGeocoding = async (value: string) => {
+    const [lat, long] = value.replace(/[()]/g, "").split(",")
+    const response = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${long}&format=json&apiKey=${process.env.NEXT_PUBLIC_GEOCODE_APIKEY}`)
+    const data = await response.json();
+
+    return data.results[0].formatted
+  }
+
   if (loading) return <div className="flex justify-center p-8"><div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div></div>;
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
@@ -116,18 +134,21 @@ export default function Report() {
                         </td>
                         <td className="px-3 py-4">
                             <div className="h-24 w-24 overflow-hidden rounded-lg">
-                            <img 
+                            {attendance.clock_in_photo && (
+                                <img 
                                 src={attendance.clock_in_photo} 
                                 alt="Clock in"
                                 className="h-full w-full object-cover"
-                            />
+                                />
+                            )}
                             </div>
                         </td>
                         <td className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                            {attendance.clock_in_location}
+                            <p>{attendance.clock_in_location ?? '-'}</p>
+                            <p>{attendance.clockInLocationName}</p>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                            {attendance.clock_out}
+                            {attendance.clock_out ?? '-'}
                         </td>
                         <td className="px-3 py-4">
                             <div className="h-24 w-24 overflow-hidden rounded-lg">
@@ -141,7 +162,9 @@ export default function Report() {
                             </div>
                         </td>
                         <td className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                            {attendance.clock_out_location}
+                            <p>{attendance.clock_out_location}</p>
+                            <p>{attendance.clockOutLocationName}</p>
+
                         </td>
                         </tr>
                     ))}
