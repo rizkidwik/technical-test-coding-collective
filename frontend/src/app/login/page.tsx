@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,13 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const router = useRouter()
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token){
+        router.push('/dashboard')
+    }
+  })
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {

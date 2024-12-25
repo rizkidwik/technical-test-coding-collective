@@ -58,7 +58,6 @@ export default function Report() {
                 clockOutLocationName: item.clock_out_location ? await reverseGeocoding(item.clock_out_location) : null
             }))
           );
-          console.log(updatedData)
         setAttendances(updatedData)
       } else {
         setError('Failed')

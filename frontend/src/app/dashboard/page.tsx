@@ -47,7 +47,7 @@ export default function Dashboard() {
     router.push('/login')
   }
 
-  if (!user) return <div>Loading...</div>
+  if (!user) return <div className="flex justify-center p-8"><div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div></div>
 
   return (
     <div className="container mx-auto p-4">
