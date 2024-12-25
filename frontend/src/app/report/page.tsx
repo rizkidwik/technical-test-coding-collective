@@ -12,9 +12,11 @@ interface Attendance {
   clock_in: string
   clock_in_photo: string
   clock_in_location: string
+  clock_in_ip: string
   clock_out: string
   clock_out_photo: string
   clock_out_location: string
+  clock_out_ip: string
   clockInLocationName: string
   clockOutLocationName: string
   
@@ -146,6 +148,7 @@ export default function Report() {
                         <td className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                             <p>{attendance.clock_in_location ?? '-'}</p>
                             <p>{attendance.clockInLocationName}</p>
+                            <p>{attendance.clock_in_ip}</p>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                             {attendance.clock_out ?? '-'}
@@ -164,7 +167,7 @@ export default function Report() {
                         <td className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                             <p>{attendance.clock_out_location}</p>
                             <p>{attendance.clockOutLocationName}</p>
-
+                            <p>{attendance.clock_out_ip}</p>
                         </td>
                         </tr>
                     ))}
