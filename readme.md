@@ -78,3 +78,22 @@ npm run dev
 ```
 
 3. Access the application at `http://localhost:3000`
+
+## Screenshots
+### Login
+![Login](./images/Login.png)
+
+### Register
+![Register](./images/Register.png)
+
+### Dashboard
+![Dashboard](./images/Dashboard.png)
+
+### Submit Attendance
+![attendance](./images/submit-attendance.png)
+
+### Report
+![Report](./images/Report.png)
+
+### Edit Profile
+![Edit Profile](./images/EditProfile.png)
