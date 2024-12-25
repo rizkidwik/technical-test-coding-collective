@@ -13,10 +13,14 @@ export default function SubmitAttendance() {
   const [type, setType] = useState('in')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const hasFetchedAttendance = useRef(false)
   const router = useRouter()
 
   useEffect(() => {
-    getTodayAttendance()
+    if (!hasFetchedAttendance.current) {
+        getTodayAttendance();
+        hasFetchedAttendance.current = true;
+    }
     getLocation()
     startCamera()
   }, [])
@@ -129,7 +133,7 @@ export default function SubmitAttendance() {
         if (response.ok) {
             const res = await response.json()
             res.data ? setType('out')  : setType('in')
-            if(res.data.clock_out){
+            if(res.data?.clock_out){
                 alert('You`ve already presence today. Thank you.')
                 router.push('/dashboard')
             }
