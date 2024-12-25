@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { UpdateProfileDTO } from "../dtos/update-profile.dto";
 import User from "../models/user";
 import bcrypt from "bcryptjs";
@@ -28,7 +29,10 @@ export class ProfileService {
         if (data.email) {
             const existingUser = await User.findOne({
                 where: {
-                    email: data.email
+                    email: data.email,
+                    id: {
+                        [Op.not]: user.id
+                    }
                 }
             });
     
