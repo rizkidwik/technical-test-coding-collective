@@ -63,10 +63,10 @@ export class AttendanceService {
 
         const reportMap = report.map(item => ({
             ...item.get(),
-            clock_in: moment(item.clock_in).tz(timezone).format('YYYY-MM-DD HH:mm'),
-            clock_in_photo: `${baseUrl}/${item.clock_in_photo}`,
-            clock_out: moment(item.clock_out).tz(timezone).format('YYYY-MM-DD HH:mm'),
-            clock_out_photo: `${baseUrl}/${item.clock_out_photo}`,
+            clock_in: item.clock_in ? moment(item.clock_in).tz(timezone).format('YYYY-MM-DD HH:mm') : null,
+            clock_in_photo: item.clock_in_photo ? `${baseUrl}/${item.clock_in_photo}` : null,
+            clock_out: item.clock_out ? moment(item.clock_out).tz(timezone).format('YYYY-MM-DD HH:mm') : null,
+            clock_out_photo: item.clock_out_photo ? `${baseUrl}/${item.clock_out_photo}` : null,
         }))
         
 
