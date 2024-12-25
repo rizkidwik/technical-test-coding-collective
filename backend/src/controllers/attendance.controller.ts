@@ -9,7 +9,7 @@ class AttendanceController {
         res: Response<ApiResponse>
     ): Promise<any> {
         try {
-            const { latitude, longitude } = req.body;
+            const { latitude, longitude, type} = req.body;
             
             if (!req.file?.path || !latitude || !longitude) {
                 throw new Error("Missing required fields: photo, latitude, and longitude are required")
@@ -22,7 +22,12 @@ class AttendanceController {
                 photo: req.file.path,
                 timestamp: new Date().toISOString()
             }
-            const result = await AttendanceService.submit(data);
+            let result = null
+            if(type == 'in'){
+                result = await AttendanceService.clockIn(data);
+            } else {
+                result = await AttendanceService.clockOut(data);
+            }
 
             return res.status(200).json({
                 success: true,
@@ -45,6 +50,27 @@ class AttendanceController {
             const timezone = typeof req.query.timezone == 'string' ? req.query.timezone : 'UTC'
 
             const result = await AttendanceService.report(timezone, req.user.id);
+
+            return res.status(200).json({
+                success: true,
+                message: 'Success',
+                data: result
+            })
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed'
+            });
+        }
+    }
+
+    public async todayAttendance(
+        req: Request<{}, ApiResponse>,
+        res: Response<ApiResponse>
+    ): Promise<any> {
+        try {
+            
+            const result = await AttendanceService.todayAttendance(req.user.id);
 
             return res.status(200).json({
                 success: true,

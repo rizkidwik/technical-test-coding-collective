@@ -4,4 +4,5 @@ export interface AttendanceRequest {
     ip: string;
     photo: string | null;
     timestamp: string;
+    user_id: number;
 }

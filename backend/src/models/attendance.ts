@@ -4,11 +4,14 @@ import User from "./user";
 class Attendance extends Model {
     public id!: number
     public user_id!: number
-    public latitude!: string
-    public longitude!: string
-    public ip!: string;
-    public photo!: string;
-    public timestamp!: Date;
+    public clock_in!: string;
+    public clock_in_location!: string;
+    public clock_in_ip!: string;
+    public clock_in_photo!: string;
+    public clock_out!: string;
+    public clock_out_location!: string;
+    public clock_out_ip!: string;
+    public clock_out_photo!: string;
     public createdAt!: Date;
     public updatedAt!: Date;
 }
@@ -22,21 +25,32 @@ Attendance.init({
             key: 'id'
         }
     },
-    latitude: {
+    clock_in: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    longitude: {
+    clock_in_location: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    ip: {
+    clock_in_ip: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    clock_in_photo: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    clock_out: {
         type: DataTypes.STRING
     },
-    photo: {
+    clock_out_location: {
         type: DataTypes.STRING
     },
-    timestamp: {
+    clock_out_ip: {
+        type: DataTypes.STRING
+    },
+    clock_out_photo: {
         type: DataTypes.STRING
     }
 }, {
@@ -44,4 +58,5 @@ Attendance.init({
     tableName: 'attendance',
     timestamps: true
 })
+
 export default Attendance

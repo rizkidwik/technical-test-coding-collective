@@ -7,4 +7,5 @@ const router = express.Router();
 
 router.post('/submit', authMiddleware,fileUploadMiddleware('photo','attendance'), AttendanceController.submit);
 router.get('/report',authMiddleware, AttendanceController.report)
+router.get('/today',authMiddleware, AttendanceController.todayAttendance )
 export default router;
