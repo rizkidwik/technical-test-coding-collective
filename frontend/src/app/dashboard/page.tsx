@@ -34,6 +34,7 @@ export default function Dashboard() {
         setUser(userData.data)
       } else {
         console.error('Failed to fetch user data')
+        localStorage.removeItem('token')
         router.push('/login')
       }
     } catch (error) {

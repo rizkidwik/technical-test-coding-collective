@@ -164,7 +164,7 @@ export default function SubmitAttendance() {
               {/* <Button type="button" onClick={startCamera}>Start Camera</Button> */}
               <video ref={videoRef} width="640" height="480" autoPlay></video>
               <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas>
-              <Button type="button" onClick={handleSubmit} className='my-5'>Submit Attendance</Button>
+              <Button type="button" id="btnSubmit" onClick={handleSubmit} className='my-5'>Submit Attendance</Button>
               {/* {photo && <p>Photo captured</p>} */}
             </div>
             {/* <Button type="submit">Submit Attendance</Button> */}
