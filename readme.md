@@ -79,6 +79,10 @@ npm run dev
 
 3. Access the application at `http://localhost:3000`
 
+## Auto Attendance With Playwright
+- Playwright for automated browser
+- node-cron for auto scheduling
+
 ## Screenshots
 ### Login
 ![Login](./images/Login.png)
