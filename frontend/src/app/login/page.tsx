@@ -71,7 +71,7 @@ export default function Login() {
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full">Login</Button>
             <div className="text-center">
-              <span className="text-sm text-gray-600">Don't have an account? </span>
+              <span className="text-sm text-gray-600">Dont have an account? </span>
               <Link href="/register" passHref>
                 <Button variant="link" className="p-0">Register</Button>
               </Link>

@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import TimezoneSelector from '@/components/timezoneSelector'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Attendance {
   id: number
@@ -32,9 +33,7 @@ export default function Report() {
   
   const router = useRouter()
 
-  useEffect(() => {
-    fetchAttendances(timezone)
-  }, [])
+
 
   const fetchAttendances = async (tz: string) => {
     const token = localStorage.getItem('token')
@@ -64,7 +63,7 @@ export default function Report() {
         router.push('/login')
       }
     }  catch (err) {
-        setError('Failed to load attendance records')
+        setError('Failed to load attendance records.' + err)
         router.push('/login')
       } finally {
         setLoading(false);
@@ -84,6 +83,10 @@ export default function Report() {
 
     return data.results[0].formatted
   }
+
+  useEffect(() => {
+    fetchAttendances(timezone)
+  }, [])
 
   if (loading) return <div className="flex justify-center p-8"><div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div></div>;
   if (error) return <div className="text-red-500 p-4">{error}</div>;
@@ -136,7 +139,7 @@ export default function Report() {
                         <td className="px-3 py-4">
                             <div className="h-24 w-24 overflow-hidden rounded-lg">
                             {attendance.clock_in_photo && (
-                                <img 
+                                <Image 
                                 src={attendance.clock_in_photo} 
                                 alt="Clock in"
                                 className="h-full w-full object-cover"
@@ -155,7 +158,7 @@ export default function Report() {
                         <td className="px-3 py-4">
                             <div className="h-24 w-24 overflow-hidden rounded-lg">
                             {attendance.clock_out_photo && (
-                                <img 
+                                <Image 
                                 src={attendance.clock_out_photo} 
                                 alt="Clock out"
                                 className="h-full w-full object-cover"

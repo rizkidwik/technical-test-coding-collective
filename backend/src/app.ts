@@ -19,8 +19,12 @@ app.use("/api/auth", authRoutes)
 app.use("/api/profile", profileRoutes)
 app.use("/api/attendance", attendanceRoutes)
 
+const uploadsDir =
+  process.env.NODE_ENV == 'production'
+    ? path.join(__dirname, '../uploads')
+    : path.join(__dirname, 'uploads') 
 // routes for open file uploaded
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 app.use(
   (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,41 +23,9 @@ export default function Profile() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    getProfile();
-  }, []);
 
-  const getProfile = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const res = await response.json();
-        setFormData(res.data);
-      } else {
-        setError("Failed");
-        router.push("/login");
-      }
-    } catch (err) {
-      setError("Failed to load attendance records");
-      router.push("/login");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -94,6 +62,40 @@ export default function Profile() {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    const getProfile = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          redirect("/login");
+        }
+    
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/profile`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (response.ok) {
+            const res = await response.json();
+            setFormData(res.data);
+          } else {
+            setError("Failed");
+            redirect("/login");
+          }
+        } catch (err) {
+          setError("Failed to load attendance records: " + err);
+          redirect("/login");
+        } finally {
+          setLoading(false);
+        }
+    };
+    
+    getProfile();
+  }, []);
 
   if (loading)
     return (

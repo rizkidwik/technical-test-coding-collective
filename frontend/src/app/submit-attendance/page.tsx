@@ -1,29 +1,20 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 
 export default function SubmitAttendance() {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
-  const [photo, setPhoto] = useState<File | null>(null)
   const [type, setType] = useState('in')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const hasFetchedAttendance = useRef(false)
   const router = useRouter()
 
-  useEffect(() => {
-    if (!hasFetchedAttendance.current) {
-        getTodayAttendance();
-        hasFetchedAttendance.current = true;
-    }
-    getLocation()
-    startCamera()
-  }, [])
+  
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -61,7 +52,6 @@ export default function SubmitAttendance() {
           (blob) => {
             if (blob) {
                 const photoFile: File = new File([blob], 'photo.jpeg', { type: 'image/jpeg' });
-                setPhoto(photoFile);
                 resolve(photoFile);
             }
           },
@@ -120,29 +110,36 @@ export default function SubmitAttendance() {
     }
   }
 
-  const getTodayAttendance = async () => {
-    try {
-        const token = localStorage.getItem('token')
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/attendance/today`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        })
-        
-        if (response.ok) {
-            const res = await response.json()
-            res.data ? setType('out')  : setType('in')
-            if(res.data?.clock_out){
-                alert('You`ve already presence today. Thank you.')
-                router.push('/dashboard')
-            }
+  
+
+  useEffect(() => {
+    const getTodayAttendance = async () => {
+        try {
+            const token = localStorage.getItem('token')
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/attendance/today`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+            })
+            
+            if (response.ok) {
+                const res = await response.json()
+                setType(res.data ? 'out' : 'in');
+                if(res.data?.clock_out){
+                    alert('You`ve already presence today. Thank you.')
+                    redirect('/dashboard')
+                }
+              }
+          } catch (error) {
+            console.error('Error submitting attendance:', error)
+            alert('An error occurred while submitting attendance')
           }
-      } catch (error) {
-        console.error('Error submitting attendance:', error)
-        alert('An error occurred while submitting attendance')
       }
-  }
+    getTodayAttendance()
+    getLocation()
+    startCamera()
+  }, [])
 
   return (
     <div className="container mx-auto p-4">

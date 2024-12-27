@@ -10,5 +10,6 @@ export const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST || "localhost",
     dialect: "mysql",
+    port: Number(process.env.DB_PORT) || 3306
   }
 );
