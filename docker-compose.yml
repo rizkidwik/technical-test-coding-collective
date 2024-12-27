@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: express-backend
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=12!@34#$
+      - DB_PORT=3306
+      - MYSQL_DATABASE=attendance-test
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/.env:/app/.env
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nextjs-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001/api
+      - NEXT_PUBLIC_GEOCODE_APIKEY=${NEXT_PUBLIC_GEOCODE_APIKEY}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/.env:/app/.env
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "33061:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 12!@34#$
+      MYSQL_DATABASE: attendance-test
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
